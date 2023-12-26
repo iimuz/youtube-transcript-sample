@@ -1,0 +1,35 @@
+[project]
+authors = [{name = "iimuz", email = "iz.primary.story+github@gmail.com"}]
+description = "youtube transcript sample."
+license = {file = "LICENSE"}
+name = "youtube-transcript-sample"
+readme = "README.md"
+requires-python = ">=3.10"
+urls = {repository = "https://github.com/iimuz/youtube-transcript-sample"}
+version = "1.0.0"
+
+dependencies = [
+  "youtube-transcript-api",
+]
+
+[tools.setuptools.package-dir]
+youtube_transcript_sample = "src"
+
+[project.optional-dependencies]
+dev = [
+  "black",
+  "flake8",
+  "flake8-black",
+  "flake8-bugbear",
+  "flake8-docstrings",
+  "flake8-isort",
+  "isort",
+  "mypy",
+]
+test = ["pytest"]
+
+[build-system]
+requires = ["setuptools>=63", "wheel"]
+
+[tool.isort]
+profile = "black"
