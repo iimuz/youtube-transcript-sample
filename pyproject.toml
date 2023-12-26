@@ -9,6 +9,7 @@ urls = {repository = "https://github.com/iimuz/youtube-transcript-sample"}
 version = "1.0.0"
 
 dependencies = [
+  "pydantic",
   "youtube-transcript-api",
 ]
 
