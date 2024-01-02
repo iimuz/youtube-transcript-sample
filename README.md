@@ -63,7 +63,7 @@ task -l
 - python
   - [ruff](https://github.com/astral-sh/ruff): python linter and formatter.
   - [mypy](https://github.com/python/mypy): static typing.
-  - docstring: [numpy 形式](https://numpydoc.readthedocs.io/en/latest/format.html)を想定しています。
+  - docstring: [numpy形式](https://numpydoc.readthedocs.io/en/latest/format.html)を想定しています。
     - vscodeの場合は[autodocstring](https://marketplace.visualstudio.com/items?itemName=njpwerner.autodocstring)拡張機能によりひな型を自動生成できます。
 - yml
   - [prettier](https://prettier.io/): formatter
