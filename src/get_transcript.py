@@ -4,6 +4,9 @@
 """
 import logging
 import sys
+from argparse import ArgumentParser
+from logging import Formatter, StreamHandler
+from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
 from youtube_transcript_api import YouTubeTranscriptApi
@@ -25,29 +28,34 @@ def _main() -> None:
 
 def _parse_args() -> _RunConfig:
     """スクリプト実行のための引数を読み込む."""
-    parser = ArgumentParser(description="pyannote-audio v3を利用するために必要なモデルをダウンロードする.")
+    parser = ArgumentParser(
+        description="pyannote-audio v3を利用するために必要なモデルをダウンロードする."
+    )
 
     parser.add_argument(
-        "-v", "--verbose", action="count", default=0, help="詳細メッセージのレベルを設定."
+        "-v",
+        "--verbose",
+        action="count",
+        default=0,
+        help="詳細メッセージのレベルを設定.",
     )
 
     args = parser.parse_args()
-    config = _RunConfig(**vars(args))
 
-    return config
+    return _RunConfig(**vars(args))
 
 
 def _setup_logger(
     filepath: Path | None,  # ログ出力するファイルパス. Noneの場合はファイル出力しない.
     loglevel: int,  # 出力するログレベル
 ) -> None:
-    """ログ出力設定
+    """ログ出力設定.
 
     Notes
     -----
     ファイル出力とコンソール出力を行うように設定する。
     """
-    lib_logger = logging.getLogger(f"interim")
+    lib_logger = logging.getLogger("interim")
 
     _logger.setLevel(loglevel)
     lib_logger.setLevel(loglevel)
