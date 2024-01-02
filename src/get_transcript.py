@@ -2,28 +2,65 @@
 
 実行方法の例:
 """
+import json
 import logging
 import sys
+import urllib.parse
 from argparse import ArgumentParser
 from logging import Formatter, StreamHandler
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
+from pydantic import BaseModel
 from youtube_transcript_api import YouTubeTranscriptApi
 
 _logger = logging.getLogger(__name__)
 
 
-class _RunConfig:
+class _RunConfig(BaseModel):
     """スクリプト実行のためのオプション."""
+
+    video_url: str  # YouTubeの動画URL
 
     verbose: int  # ログレベル
 
 
 def _main() -> None:
-    video_url = ""
-    video_id = video_url.split("v=")[-1]
-    YouTubeTranscriptApi.get_transcript(video_id)
+    """スクリプトのエントリポイント."""
+    # 実行時引数の取得
+    config = _parse_args()
+
+    # ログ設定
+    loglevel = {
+        0: logging.ERROR,
+        1: logging.WARNING,
+        2: logging.INFO,
+        3: logging.DEBUG,
+    }.get(config.verbose, logging.DEBUG)
+    _setup_logger(filepath=None, loglevel=loglevel)
+    _logger.info(config)
+
+    parsed_url = urllib.parse.urlparse(config.video_url)
+    query = urllib.parse.parse_qs(parsed_url.query)
+    video_ids = query.get("v", None)
+    if video_ids is None:
+        _logger.error("Invalid video URL: %s", config.video_url)
+        message = "Invalid video URL"
+        raise ValueError(message)
+    if len(video_ids) != 1:
+        _logger.error(
+            "video url has multiple video_id: url=%s, ids=%s",
+            config.video_url,
+            video_ids,
+        )
+        message = "Invalid video URL"
+        raise ValueError(message)
+    video_id = video_ids[0]
+
+    _logger.info("video_id: %s", video_id)
+    transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=["ja"])
+    filepath = Path(f"{video_id}.json")
+    filepath.write_text(json.dumps(transcript, indent=2, ensure_ascii=False))
 
 
 def _parse_args() -> _RunConfig:
@@ -32,6 +69,7 @@ def _parse_args() -> _RunConfig:
         description="pyannote-audio v3を利用するために必要なモデルをダウンロードする."
     )
 
+    parser.add_argument("video_url", type=str, help="YouTubeの動画URL.")
     parser.add_argument(
         "-v",
         "--verbose",
