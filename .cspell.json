@@ -1,7 +1,25 @@
 {
   "version": "0.2",
   "language": "en",
-  "words": [],
+  "words": [
+    "autodocstring",
+    "cmds",
+    "dotenv",
+    "dprint",
+    "iimuz",
+    "lastmod",
+    "levelname",
+    "mypy",
+    "numpy",
+    "pyannote",
+    "pydantic",
+    "pyproject",
+    "pytest",
+    "setuptools",
+    "Taskfile",
+    "unfixable",
+    "venv"
+  ],
   "dictionaries": [],
   "ignorePaths": [
     "**/.git/**",
