@@ -1,7 +1,7 @@
 ---
 title: YouTube Transcript Sample
 date: 2023-12-26
-lastmod: 2024-01-02
+lastmod: 2024-01-07
 ---
 
 ## 概要
@@ -67,3 +67,22 @@ task -l
     - vscodeの場合は[autodocstring](https://marketplace.visualstudio.com/items?itemName=njpwerner.autodocstring)拡張機能によりひな型を自動生成できます。
 - yml
   - [prettier](https://prettier.io/): formatter
+
+## 保存形式
+
+出力はjsonファイルで下記のような形式で保存します。
+
+```json
+[
+  {
+    "text": "hoge",
+    "start": 0.75,
+    "duration": 8.0
+  },
+  {
+    "text": "geho",
+    "start": 5.6,
+    "duration": 7.1
+  }
+]
+```
