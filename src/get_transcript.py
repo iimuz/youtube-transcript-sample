@@ -37,7 +37,8 @@ def _main() -> None:
         2: logging.INFO,
         3: logging.DEBUG,
     }.get(config.verbose, logging.DEBUG)
-    _setup_logger(filepath=None, loglevel=loglevel)
+    log_filepath = Path("data/interim") / (Path(__file__).stem + ".log")
+    _setup_logger(filepath=log_filepath, loglevel=loglevel)
     _logger.info(config)
 
     parsed_url = urllib.parse.urlparse(config.video_url)
