@@ -31,12 +31,6 @@ YouTube から Transcript を取得するためのサンプルコードです。
 
 ## ローカル環境の構築
 
-事前に下記が利用できるように環境を設定してください。
-
-- [node.js](https://nodejs.org/en): 開発環境のlinterに利用します。
-- [python](https://nodejs.org/en)
-- [task](https://taskfile.dev/): タスクランナーとして利用します。
-
 仮想環境などの構築は下記のコマンドで実行します。
 
 ```sh
@@ -46,13 +40,22 @@ task init
 task init-dev
 ```
 
-## Taskfile
+## 実行方法
 
-実行可能なタスク一覧は下記のコマンドで確認してください。
+事前に下記が利用できるように環境を設定してください。
 
-```sh
-task -l
-```
+- [node.js](https://nodejs.org/en): 開発環境のlinterに利用します。
+- [python](https://nodejs.org/en)
+- [task](https://taskfile.dev/): タスクランナーとして利用します。
+
+主なコマンドを下記に記載します。
+その他の実行可能なタスクは`task -l`で確認してください。
+また、スクリプトの引数についての詳細は、`hoge.py`で参照してください。
+
+- 実行環境の構築
+  - 実行だけできればよい場合: `task init`
+  - 開発環境もインストールする場合: `task init-dev`
+- トランスクリプトファイルを取得するスクリプトの実行: `python src/get_transcript.py https://www.youtube.com/watch?v=XXXXXXXXXXX`
 
 ## code style
 
