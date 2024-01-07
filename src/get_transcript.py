@@ -1,6 +1,7 @@
 """YouTubeからTranscriptをダウンロードするスクリプト.
 
 実行方法の例:
+    `python get_transcript.py https://www.youtube.com/watch?v=XXXXXXXXXXX -l=ja`
 """
 import json
 import logging
