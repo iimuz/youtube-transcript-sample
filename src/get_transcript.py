@@ -7,6 +7,7 @@ import logging
 import sys
 import urllib.parse
 from argparse import ArgumentParser
+from enum import Enum
 from logging import Formatter, StreamHandler
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
@@ -17,10 +18,18 @@ from youtube_transcript_api import YouTubeTranscriptApi
 _logger = logging.getLogger(__name__)
 
 
+class _Language(Enum):
+    """ダウンロードする言語."""
+
+    JA = "ja"  # 日本語
+    EN = "en"  # 英語
+
+
 class _RunConfig(BaseModel):
     """スクリプト実行のためのオプション."""
 
     video_url: str  # YouTubeの動画URL
+    languages: list[_Language]  # 取得する言語
 
     verbose: int  # ログレベル
 
@@ -30,6 +39,11 @@ def _main() -> None:
     # 実行時引数の取得
     config = _parse_args()
 
+    # データフォルダの設定
+    data_dir = Path("data")
+    interim_dir = data_dir / "interim"
+    raw_dir = data_dir / "raw"
+
     # ログ設定
     loglevel = {
         0: logging.ERROR,
@@ -37,7 +51,7 @@ def _main() -> None:
         2: logging.INFO,
         3: logging.DEBUG,
     }.get(config.verbose, logging.DEBUG)
-    log_filepath = Path("data/interim") / (Path(__file__).stem + ".log")
+    log_filepath = interim_dir / (Path(__file__).stem + ".log")
     _setup_logger(filepath=log_filepath, loglevel=loglevel)
     _logger.info(config)
 
@@ -51,8 +65,13 @@ def _main() -> None:
     video_id = video_ids[0]
 
     _logger.info("video_id: %s", video_id)
-    transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=["ja"])
-    filepath = Path(f"{video_id}.json")
+    filepath = raw_dir / f"{video_id}.json"
+    if filepath.exists():
+        _logger.info("Skip downloading transcript: %s", filepath)
+        return
+
+    languages = [lang.value for lang in config.languages]
+    transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=languages)
     filepath.write_text(json.dumps(transcript, indent=2, ensure_ascii=False))
 
 
@@ -63,6 +82,14 @@ def _parse_args() -> _RunConfig:
     )
 
     parser.add_argument("video_url", type=str, help="YouTubeの動画URL.")
+    parser.add_argument(
+        "-l",
+        "--languages",
+        choices=[v.value for v in _Language],
+        nargs="+",
+        help="取得する言語.",
+    )
+
     parser.add_argument(
         "-v",
         "--verbose",
