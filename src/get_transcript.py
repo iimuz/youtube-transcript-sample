@@ -37,17 +37,18 @@ def _main() -> None:
         2: logging.INFO,
         3: logging.DEBUG,
     }.get(config.verbose, logging.DEBUG)
-    _setup_logger(filepath=None, loglevel=loglevel)
+    log_filepath = Path("data/interim") / (Path(__file__).stem + ".log")
+    _setup_logger(filepath=log_filepath, loglevel=loglevel)
     _logger.info(config)
 
     parsed_url = urllib.parse.urlparse(config.video_url)
     query = urllib.parse.parse_qs(parsed_url.query)
-    video_ids = query.get("v", None)
     video_ids = query.get("v", [])
     if len(video_ids) != 1:
+        _logger.error("Invalid video URL: %s", config.video_url)
         message = "Invalid video URL"
         raise ValueError(message)
-    if len(video_ids) != 1:
+    video_id = video_ids[0]
 
     _logger.info("video_id: %s", video_id)
     transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=["ja"])
